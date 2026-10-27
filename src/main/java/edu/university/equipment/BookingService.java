@@ -18,4 +18,7 @@ public class BookingService {
  }
  public synchronized Booking getBooking(String id){Booking b=bookings.get(id);if(b==null)throw new NoSuchElementException("Booking not found: "+id);return b;}
  public synchronized Booking cancel(String id){Booking b=getBooking(id);if("CANCELLED".equals(b.getStatus()))throw new IllegalStateException("Booking already cancelled");Equipment e=getEquipment(b.getEquipmentId());e.setAvailableQuantity(e.getAvailableQuantity()+b.getQuantity());b.setStatus("CANCELLED");return b;}
+ public synchronized int getBookingCount() {
+    return bookings.size();
+}
 }

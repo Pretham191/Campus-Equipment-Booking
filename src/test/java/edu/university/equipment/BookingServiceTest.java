@@ -19,12 +19,21 @@ void bookingExactlyAvailableInventoryIsAccepted() {
 
 @Test
 void exceedingAvailableInventoryDoesNotChangeInventoryOrCreateBooking() {
+    int initialInventory =
+        service.getEquipment("PROJECTOR01").getAvailableQuantity();
+    int initialBookingCount = service.getBookingCount();
+
     assertThrows(
         IllegalStateException.class,
         () -> service.create("STU1001", "PROJECTOR01", 5)
     );
 
-    assertEquals(4, service.getEquipment("PROJECTOR01").getAvailableQuantity());
+    assertEquals(
+        initialInventory,
+        service.getEquipment("PROJECTOR01").getAvailableQuantity()
+    );
+
+    assertEquals(initialBookingCount, service.getBookingCount());
 }
 @Test
 void sequentialBookingsWithinInventoryAreAccepted() {
