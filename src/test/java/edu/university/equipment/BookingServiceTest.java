@@ -37,21 +37,37 @@ void exceedingAvailableInventoryDoesNotChangeInventoryOrCreateBooking() {
 }
 @Test
 void sequentialBookingsWithinInventoryAreAccepted() {
-    service.create("STU1001", "PROJECTOR01", 2);
-    service.create("STU1002", "PROJECTOR01", 2);
+    Booking firstBooking = service.create("STU1001", "PROJECTOR01", 2);
+    Booking secondBooking = service.create("STU1002", "PROJECTOR01", 2);
 
-    assertEquals(0, service.getEquipment("PROJECTOR01").getAvailableQuantity());
+    assertEquals("CONFIRMED", firstBooking.getStatus());
+    assertEquals("CONFIRMED", secondBooking.getStatus());
+
+    assertEquals(2, firstBooking.getQuantity());
+    assertEquals(2, secondBooking.getQuantity());
+
+    assertEquals(
+        0,
+        service.getEquipment("PROJECTOR01").getAvailableQuantity()
+    );
 }
-
 @Test
 void sequentialBookingsCannotExceedTotalInventory() {
-    service.create("STU1001", "PROJECTOR01", 3);
+    Booking firstBooking = service.create("STU1001", "PROJECTOR01", 3);
+    int initialBookingCount = service.getBookingCount();
+
+    assertEquals("CONFIRMED", firstBooking.getStatus());
 
     assertThrows(
         IllegalStateException.class,
         () -> service.create("STU1002", "PROJECTOR01", 2)
     );
 
-    assertEquals(1, service.getEquipment("PROJECTOR01").getAvailableQuantity());
+    assertEquals(
+        1,
+        service.getEquipment("PROJECTOR01").getAvailableQuantity()
+    );
+
+    assertEquals(initialBookingCount, service.getBookingCount());
 }
 }
