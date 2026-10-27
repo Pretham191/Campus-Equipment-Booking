@@ -31,6 +31,7 @@ This project addresses the Set G change request: preventing sequential booking r
 - Spring Boot
 - Maven
 - Git
+- Jenkins
 - Docker
 - Kubernetes
 - Minikube
@@ -50,6 +51,67 @@ mvn clean package
 ```
 
 The packaged application JAR is generated in the `target/` directory.
+
+## Maven Build and Testing
+
+### Prerequisites
+- Java Development Kit (JDK) 17
+- Apache Maven 3.6 or later
+
+### Verify Installation
+
+Check the installed Java and Maven versions:
+
+```bash
+java -version
+javac -version
+mvn -version
+```
+
+**Note:** The project requires Java 17. Ensure Maven uses a compatible JDK, particularly when running builds through Jenkins.
+
+### Run Unit Tests
+
+Execute the following command to clean the previous build outputs and run the unit tests:
+
+```bash
+mvn clean test
+```
+
+The tests validate application functionality, including:
+- Successful equipment bookings.
+- Rejection of zero or negative quantities.
+- Rejection of bookings exceeding available inventory.
+- Acceptance of bookings matching the available inventory.
+- Inventory updates after successful bookings.
+- Sequential booking validation to prevent overbooking.
+- Inventory restoration when bookings are cancelled.
+
+### Package the Application
+
+Generate the application JAR:
+
+```bash
+mvn clean package
+```
+
+The generated JAR is available in the `target/` directory.
+
+### Troubleshooting
+
+**Error: `release version 17 not supported`**
+
+This error occurs when Maven uses a Java compiler that does not support Java 17.
+
+To resolve it:
+
+1. Ensure JDK 17 is installed.
+2. Verify the Java compiler version using `javac -version`.
+3. Check the Java version Maven uses with `mvn -version`.
+4. Configure Jenkins to use JDK 17 for pipeline builds.
+5. Rerun the pipeline after correcting the Java configuration.
+
+Jenkins must use a compatible JDK even if Java 17 works correctly in the local terminal.
 
 ## Docker
 
